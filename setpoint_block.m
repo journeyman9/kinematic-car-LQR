@@ -61,7 +61,7 @@ y_d = [t zeros(length(psi_d), 1)];
 sim_time = t(end, 1);
 
 %% Simulink
-y_IC = 8;
+y_IC = 1;
 ICs = [y_IC deg2rad(0)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
