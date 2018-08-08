@@ -38,13 +38,13 @@ NN = G'*Q*H;
 [K S e] = lqr(sys, QQ, RR, NN);
 
 %% Set Point Control
-% Q_sp = [A, B; G, H];
-% [n, n] = size(A);
-% [l, p] = size(G); % number of controlled outputs
-% m = 1; % number of process inputs, or just inputs
-% M = pinv(Q_sp); % psuedo inverse if matrix not square
-% F = M(1:n, end-l+1:end);
-% N = M(end-m+1:end, end-l+1:end);
+Q_sp = [A, B; G, H];
+[n, n] = size(A);
+[l, p] = size(G); % number of controlled outputs
+m = 1; % number of process inputs, or just inputs
+M = pinv(Q_sp); % psuedo inverse if matrix not square
+F = M(1:n, end-l+1:end);
+N = M(end-m+1:end, end-l+1:end);
 
 %% Feedforward
 track_vector = csvread('t_circle.txt');
@@ -59,7 +59,7 @@ sim_time = t(end, 1);
 
 %% Simulink
 y_IC = 0;
-ICs = [y_IC deg2rad(90)];
+ICs = [y_IC deg2rad(45)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
