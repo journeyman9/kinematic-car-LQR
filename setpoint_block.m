@@ -47,25 +47,25 @@ NN = G'*Q*H;
 % N = M(end-m+1:end, end-l+1:end);
 
 %% Feedforward
-track_vector = csvread('t_lanechange.txt');
+track_vector = csvread('t_circle.txt');
 s =  track_vector(:, 5);
 t = abs(s/V);
 curv = [t track_vector(:, 3)];
-psi_d = [t track_vector(:, 4)];
-y_d = [t track_vector(:, 2)];
-x_d = [t track_vector(:, 1)];
+yaw_r = [t track_vector(:, 4)];
+y_r = [t track_vector(:, 2)];
+x_r = [t track_vector(:, 1)];
 
 sim_time = t(end, 1);
 
 %% Simulink
 y_IC = 0;
-ICs = [y_IC deg2rad(0)];
+ICs = [y_IC deg2rad(90)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
 
 y_e = deviation(:, 1);
-psi_e = deviation(:, 2);
+yaw_e = deviation(:, 2);
 
 %% Plots
 
@@ -77,7 +77,7 @@ plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 ylabel('y_{e} [m]')
 hold off
 subplot 212
-plot(tout, rad2deg(psi_e))
+plot(tout, rad2deg(yaw_e))
 hold on
 plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 hold off
