@@ -5,7 +5,7 @@ clear; close all; clc;
 
 %% Parameters
 L = 1.524; %[m]
-V = 10; %[m/s]
+V = 4.5; %[m/s]
 
 %% Linearized State Space
 A = [0 V;
@@ -17,9 +17,6 @@ A = [0 V;
 C = eye(2);
 
 D = zeros(2, 1);
-
-E = [0 -V;
-     0 0];
 
 sys = ss(A, B, C, D);
 
@@ -51,24 +48,24 @@ NN = G'*Q*H;
 
 %% Feedforward
 track_vector = csvread('t_lanechange.txt');
-s = track_vector(:, 5);
-t = s/V;
+s =  track_vector(:, 5);
+t = abs(s/V);
 curv = [t track_vector(:, 3)];
 psi_d = [t track_vector(:, 4)];
-% y_d = [t track_vector(:, 2)];
-y_d = [t zeros(length(psi_d), 1)];
+y_d = [t track_vector(:, 2)];
+x_d = [t track_vector(:, 1)];
 
 sim_time = t(end, 1);
 
 %% Simulink
-y_IC = 1;
+y_IC = 0;
 ICs = [y_IC deg2rad(0)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
 
-y_e = state(:, 1);
-psi_e = state(:, 2);
+y_e = deviation(:, 1);
+psi_e = deviation(:, 2);
 
 %% Plots
 
@@ -76,16 +73,16 @@ figure
 subplot 211
 plot(tout, y_e)
 hold on
-plot(tout, des(:, 1), '--r')
+plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 ylabel('y_{e} [m]')
 hold off
 subplot 212
 plot(tout, rad2deg(psi_e))
 hold on
-plot(tout, rad2deg(des(:, 2)), '--r')
+plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 hold off
 xlabel('time[s]')
-ylabel('\psi [{\circ}]')
+ylabel('\psi_e [{\circ}]')
 legend('response', 'desired')
 movegui('west')
 
