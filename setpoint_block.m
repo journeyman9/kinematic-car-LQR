@@ -47,11 +47,13 @@ F = M(1:n, end-l+1:end);
 N = M(end-m+1:end, end-l+1:end);
 
 %% Feedforward
-track_vector = csvread('t_circle.txt');
+track_vector = csvread('t_lanechange.txt');
 s =  track_vector(:, 5);
 t = abs(s/V);
 curv = [t track_vector(:, 3)];
 yaw_r = [t track_vector(:, 4)];
+% yaw_r = [t linspace(pi/2, 3*pi, length(t))'];
+
 y_r = [t track_vector(:, 2)];
 x_r = [t track_vector(:, 1)];
 
@@ -59,7 +61,7 @@ sim_time = t(end, 1);
 
 %% Simulink
 y_IC = 0;
-ICs = [y_IC deg2rad(45)];
+ICs = [y_IC deg2rad(0)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
