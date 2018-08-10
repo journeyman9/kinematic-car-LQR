@@ -47,12 +47,11 @@ F = M(1:n, end-l+1:end);
 N = M(end-m+1:end, end-l+1:end);
 
 %% Feedforward
-track_vector = csvread('t_lanechange.txt');
+track_vector = csvread('t_circle.txt');
 s =  track_vector(:, 5);
 t = abs(s/V);
 curv = [t track_vector(:, 3)];
 yaw_r = [t track_vector(:, 4)];
-% yaw_r = [t linspace(pi/2, 3*pi, length(t))'];
 
 y_r = [t track_vector(:, 2)];
 x_r = [t track_vector(:, 1)];
@@ -61,7 +60,7 @@ sim_time = t(end, 1);
 
 %% Simulink
 y_IC = 0;
-ICs = [y_IC deg2rad(0)];
+ICs = [y_IC deg2rad(90)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
@@ -72,13 +71,13 @@ yaw_e = deviation(:, 2);
 %% Plots
 
 figure
-subplot 211
+ax1=subplot(2,1,1);
 plot(tout, y_e)
 hold on
 plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 ylabel('y_{e} [m]')
 hold off
-subplot 212
+ax2=subplot(2,1,2);
 plot(tout, rad2deg(yaw_e))
 hold on
 plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
@@ -87,6 +86,7 @@ xlabel('time[s]')
 ylabel('\psi_e [{\circ}]')
 legend('response', 'desired')
 movegui('west')
+linkaxes([ax1 ax2],'x');
 
 figure
 plot(track_vector(:, 1), track_vector(:, 2), '--r')
