@@ -71,13 +71,13 @@ yaw_e = deviation(:, 2);
 %% Plots
 
 figure
-ax1=subplot(2,1,1);
+ax1 = subplot(2,1,1);
 plot(tout, y_e)
 hold on
 plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
 ylabel('y_{e} [m]')
 hold off
-ax2=subplot(2,1,2);
+ax2 = subplot(2,1,2);
 plot(tout, rad2deg(yaw_e))
 hold on
 plot(tout, 0*linspace(0, max(tout), length(tout)), '--r')
