@@ -5,7 +5,7 @@ clear; close all; clc;
 
 %% Parameters
 L = 1.524; %[m]
-V = 4.5; %[m/s]
+V = -4.5; %[m/s]
 
 %% Linearized State Space
 A = [0 V;
@@ -47,11 +47,11 @@ F = M(1:n, end-l+1:end);
 N = M(end-m+1:end, end-l+1:end);
 
 %% Feedforward
-track_vector = csvread('t_lanechange.txt');
+track_vector = csvread('t_cw_circle.txt');
 s =  track_vector(:, 5);
 t = abs(s/V);
 curv = [t track_vector(:, 3)];
-yaw_r = [t track_vector(:, 4)];
+yaw_r = [t track_vector(:, 4)-pi];
 
 y_r = [t track_vector(:, 2)];
 x_r = [t track_vector(:, 1)];
@@ -59,8 +59,8 @@ x_r = [t track_vector(:, 1)];
 sim_time = t(end, 1);
 
 %% Simulink
-y_IC = 0;
-ICs = [y_IC deg2rad(0)];
+y_IC = 5;
+ICs = [y_IC deg2rad(45)];
 vehicleIC = [track_vector(1,1)-y_IC*sin(ICs(2)) track_vector(1,2)+y_IC*cos(ICs(2))];
 
 sim('sp.slx')
